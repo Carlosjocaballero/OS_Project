@@ -2,17 +2,17 @@
 
 int main()
 {
-	// SimulatedOS osSim{3, 96, 32};
+	SimulatedOS osSim{3, 96, 32};
 
-	// osSim.NewProcess(4);
-	// osSim.NewProcess(2);
-	// osSim.NewProcess(7);
+	osSim.NewProcess(4);
+	osSim.NewProcess(2);
+	osSim.NewProcess(7);
 
-	// osSim.PrintCPU();
-	// // CPU: 3
+	osSim.PrintCPU();
+	// CPU: 3
 
-	// osSim.PrintReadyQueue();
-	// // Ready-Queue: 1 2
+	osSim.PrintReadyQueue();
+	// Ready-Queue: 1 2
 
 	// osSim.DiskReadRequested(0, "HW.txt");
 
@@ -51,9 +51,13 @@ int main()
 	// // Frame	Page	PID
 	// // 0		0		1
 
-	SimulatedOS os(12,13,14);
-	os.NewProcess(4);
-	os.printCPU();
+	// SimulatedOS os(12,13,14);
+	// os.NewProcess(4);
+	// os.NewProcess(5);
+	// os.NewProcess(3);
+	// os.NewProcess(7);
+	// os.PrintCPU();
+	// os.PrintReadyQueue();
 
 
 

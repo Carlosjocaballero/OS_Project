@@ -1,6 +1,9 @@
 #include "Process.h"
-#include <iostream>
-Process::Process(int& pid, int& priority){
+
+Process::Process(){}
+
+Process::Process(int pid, int priority){
+    priority_ = priority;
     pid_ = pid;
 }
 
@@ -14,7 +17,6 @@ int Process::getPC() const{
 }
 
 int Process::getPID() const{
-    std::cout << pid_ << std::endl;
     return pid_;
 }
 
