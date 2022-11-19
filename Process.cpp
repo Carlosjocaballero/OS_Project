@@ -4,9 +4,6 @@ Process::Process(int& pid, int& priority){
     pid_ = pid;
 }
 
-Process::Process(int&& pid, int&& priority){
-    pid_ = pid;
-}
 
 void Process::updatePC(int newPC){
     pc = newPC;

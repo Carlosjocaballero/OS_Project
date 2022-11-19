@@ -5,11 +5,10 @@
 class CPU{
     public:
         CPU();
-        void updateRunning(Process* p1);
-        int getRunningPriority() const;
+        void setRunningPID(int priority);
+        int returnPID() const;
 
-        int getRunningPID() const;
-
+        bool isEmpty() const;
     private:
-        Process run
+        int runningPID;
 };

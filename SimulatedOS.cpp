@@ -1,12 +1,18 @@
 #include "SimulatedOS.h"
 #include <iostream>
 
-void SimulatedOS::NewProcess(int n){
-    int pid = 1;
-    Process* p= new Process(pid, n);
-    gpu.updateRunning(p);
+SimulatedOS::SimulatedOS(int numberOfDisks, int amountOfRAM, int pageSize){
+    pidCounter = 1;
+    cpu.setRunningPID(0);
+}
+
+void SimulatedOS::NewProcess(int priority){
+    Process pros(pidCounter, priority);
+    processTable[pidCounter++] = pros;
+    ;
 }
 
 void SimulatedOS::printCPU() const{
-    std::cout << gpu.getRunningPID() << std::endl;
+    if(cpu.isEmpty()) std::cout << "CPU is idle" << std::endl;
+
 }

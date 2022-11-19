@@ -1,13 +1,17 @@
 #include "Cpu.h"
 
 CPU::CPU(){
-    running = nullptr;
+    runningPID = 0;
 }
 
-void CPU::updateRunning(Process* p1){
-    running = p1;
+void CPU::setRunningPID(int pid){
+    runningPID = pid;
 }
 
-int CPU::getRunningPID() const{
-    return running->getPID();
+int CPU::returnPID() const{
+    return runningPID;
+}
+
+bool CPU::isEmpty() const{
+    return runningPID == 0;
 }

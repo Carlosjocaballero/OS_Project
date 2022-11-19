@@ -51,7 +51,7 @@ int main()
 	// // Frame	Page	PID
 	// // 0		0		1
 
-	SimulatedOS os;
+	SimulatedOS os(12,13,14);
 	os.NewProcess(4);
 	os.printCPU();
 

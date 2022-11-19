@@ -9,7 +9,6 @@ class Process{
          * @param priority Priority of the process
          */
         Process(int& pid, int& priority);
-        Process(int&& pid, int&& priority);
         int getPID() const;
         int getPriority() const;
         int getPC() const;
