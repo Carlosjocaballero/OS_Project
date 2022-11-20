@@ -14,16 +14,16 @@ int main()
 	osSim.PrintReadyQueue();
 	// Ready-Queue: 1 2
 
-	// osSim.DiskReadRequested(0, "HW.txt");
+	osSim.DiskReadRequested(0, "HW.txt");
 
-	// osSim.PrintCPU();
-	// // CPU: 1
+	osSim.PrintCPU();
+	// CPU: 1
 
-	// osSim.PrintDisk(0);
-	// // Disk 0: PID 3, "HW.txt"
+	osSim.PrintDisk(0);
+	// Disk 0: PID 3, "HW.txt"
 
-	// osSim.PrintDiskQueue(0);
-	// // Disk 0 I/O-queue: Empty
+	osSim.PrintDiskQueue(0);
+	// Disk 0 I/O-queue: Empty
 
 	// osSim.PrintDiskQueue(5);
 	// // Instruction ignored: no disk with such number exists
@@ -56,8 +56,9 @@ int main()
 	// os.NewProcess(5);
 	// os.NewProcess(3);
 	// os.NewProcess(7);
-	// os.PrintCPU();
-	// os.PrintReadyQueue();
+	
+
+
 
 
 
