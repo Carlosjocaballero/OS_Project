@@ -2,6 +2,7 @@
 #include "Process.h"
 #include "Cpu.h"
 #include "DiskContainer.h"
+#include "Ram.h"
 
 #include <iostream>
 #include <vector>
@@ -22,6 +23,7 @@ class SimulatedOS{
         void PrintDiskQueue(int diskNumber) const;
     private:
         CPU cpu;
+        Ram ram;
         std::priority_queue< int, std::vector<int>> pq;
         std::vector<DiskContainer> disks;
         std::unordered_map<int, Process> processTable;
