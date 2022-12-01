@@ -1,13 +1,16 @@
 #include "SimulatedOS.h"
 
-SimulatedOS::SimulatedOS(int numberOfDisks, int amountOfRAM, int pageSize){
+SimulatedOS::SimulatedOS(int numberOfDisks, int amountOfRAM, int pageSize) : pageSize_(pageSize){
     pidCounter = 1;
     disks.resize(numberOfDisks);
+    maxPage = amountOfRAM / pageSize;
+    ram.setMaxFrame(maxPage);
 }
 
 
 void SimulatedOS::NewProcess(int priority){
     Process pros(pidCounter, priority);
+
     processTable.insert({priority, pros});
     if(cpu.isEmpty()) {
         cpu.setRunningPID(processTable[priority].getPID());
@@ -22,10 +25,16 @@ void SimulatedOS::NewProcess(int priority){
             pq.pop();
         }
     }
+
+    ram.insert(0, processTable[priority].getPID());
+
+
     pidCounter++;
 }
 
 void SimulatedOS::Exit(){
+    ram.remove(cpu.returnPID());
+
     if(!pq.empty()){
         cpu.setRunningPID(processTable[pq.top()].getPID());
         cpu.setRunningPriority(pq.top());
@@ -54,6 +63,13 @@ void SimulatedOS::DiskReadRequested( int diskNumber, std::string fileName ){
                 Exit();
             }
         }
+}
+
+void SimulatedOS::FetchFrom(unsigned int memoryAddress){
+    processTable[cpu.returnPriority()].updatePC(memoryAddress);
+    int corrPage = memoryAddress/pageSize_;
+    ram.insert(corrPage, cpu.returnPID());
+
 }
 
 void SimulatedOS::DiskJobCompleted(int diskNumber){
@@ -97,6 +113,10 @@ void SimulatedOS::PrintReadyQueue() const{
         }
         std::cout << std::endl;
     }
+}
+
+void SimulatedOS::PrintRAM() const{
+    ram.print();
 }
 
 
