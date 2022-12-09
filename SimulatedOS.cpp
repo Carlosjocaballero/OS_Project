@@ -10,11 +10,11 @@ SimulatedOS::SimulatedOS(int numberOfDisks, int amountOfRAM, int pageSize) : pag
 
 void SimulatedOS::NewProcess(int priority){
     Process pros(pidCounter, priority);
-
     processTable.insert({priority, pros});
     if(cpu.isEmpty()) {
         cpu.setRunningPID(processTable[priority].getPID());
         cpu.setRunningPriority(processTable[priority].getPriority());
+        FetchFrom(processTable[cpu.returnPriority()].getPC());
     }
     else{
         pq.push(pros.getPriority());
@@ -22,13 +22,11 @@ void SimulatedOS::NewProcess(int priority){
             pq.push(cpu.returnPriority());
             cpu.setRunningPID(processTable[pq.top()].getPID());
             cpu.setRunningPriority(pq.top());
+            FetchFrom(processTable[cpu.returnPriority()].getPC());
             pq.pop();
         }
+        ram.insert(0, processTable[priority].getPID());
     }
-
-    ram.insert(0, processTable[priority].getPID());
-
-
     pidCounter++;
 }
 
@@ -49,10 +47,21 @@ void SimulatedOS::Exit(){
 
 void SimulatedOS::DiskReadRequested( int diskNumber, std::string fileName ){
         if(cpu.isEmpty()) std::cout << "CPU is idle. No process is running." << std::endl;
+        else if(diskNumber >= disks.size()) std::cout << "Instruction ignored. no disk with such number exists" << std::endl;
         else{
+            // if the disk is not being used and it has an empty queue
             if(disks[diskNumber].isDiskQueueEmpty() && disks[diskNumber].getDiskPriority() == 0){
                 disks[diskNumber].setDiskPriority(cpu.returnPriority());
-                Exit();
+                if(!pq.empty()){
+                    cpu.setRunningPID(processTable[pq.top()].getPID());
+                    cpu.setRunningPriority(pq.top());
+                    FetchFrom(processTable[cpu.returnPriority()].getPC());
+                    pq.pop();
+                }
+                else{
+                    cpu.setRunningPID(0);
+                    cpu.setRunningPriority(0);
+                }
                 disks[diskNumber].setDiskFile(fileName);
             }
             else{
@@ -60,7 +69,16 @@ void SimulatedOS::DiskReadRequested( int diskNumber, std::string fileName ){
                 temp.setProcessPriority(cpu.returnPriority());
                 temp.setReadFile(fileName);
                 disks[diskNumber].push(temp);
-                Exit();
+                if(!pq.empty()){
+                    cpu.setRunningPID(processTable[pq.top()].getPID());
+                    cpu.setRunningPriority(pq.top());
+                    FetchFrom(processTable[cpu.returnPriority()].getPC());
+                    pq.pop();
+                }
+                else{
+                    cpu.setRunningPID(0);
+                    cpu.setRunningPriority(0);
+                }
             }
         }
 }
@@ -69,13 +87,16 @@ void SimulatedOS::FetchFrom(unsigned int memoryAddress){
     processTable[cpu.returnPriority()].updatePC(memoryAddress);
     int corrPage = memoryAddress/pageSize_;
     ram.insert(corrPage, cpu.returnPID());
-
+    ram.isRunning(corrPage, cpu.returnPID());
+    // Create a private variable in ram in which every time FetchFrom is used, it sets that frame as the last used
+    ram.setRunningEntry(corrPage, cpu.returnPID());
 }
 
 void SimulatedOS::DiskJobCompleted(int diskNumber){
     if(cpu.isEmpty()) {
         cpu.setRunningPID(processTable[disks[diskNumber].getDiskPriority()].getPID());
         cpu.setRunningPriority(disks[diskNumber].getDiskPriority());
+        FetchFrom(processTable[cpu.returnPriority()].getPC());
     }
     else{
         pq.push(disks[diskNumber].getDiskPriority());
@@ -83,9 +104,12 @@ void SimulatedOS::DiskJobCompleted(int diskNumber){
             pq.push(cpu.returnPriority());
             cpu.setRunningPID(processTable[pq.top()].getPID());
             cpu.setRunningPriority(pq.top());
+            FetchFrom(processTable[cpu.returnPriority()].getPC());
             pq.pop();
         }
     }
+    // DEBUG //////
+    if(disks[diskNumber].isDiskQueueEmpty() )
 
     disks[diskNumber].setDiskPriority(disks[diskNumber].top().getProcessPriority());
     disks[diskNumber].setDiskFile(disks[diskNumber].top().getFile());
@@ -142,5 +166,4 @@ void SimulatedOS::PrintDiskQueue(int diskNumber) const{
             std::cout << std::endl;
         }
     }
-
 }

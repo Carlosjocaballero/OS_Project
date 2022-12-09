@@ -5,6 +5,7 @@ Process::Process(){}
 Process::Process(int pid, int priority){
     priority_ = priority;
     pid_ = pid;
+    pc = 0;
 }
 
 

@@ -6,8 +6,8 @@ Ram::Ram(){
 }
 
 void Ram::insert(int page, int pid){
+    // If the page and id are already in the table
     if(isInTable(page, pid)){
-        int frame;
         for(auto itr = pageTable.begin(); itr != pageTable.end(); itr++){
             if(itr->second.getPage() == page && itr->second.getPid() == pid){
                 usedMemory.remove(itr->first);
@@ -40,6 +40,15 @@ void Ram::insert(int page, int pid){
         usedMemory.push_front(frameCounter);
         frameCounter++;
     }
+
+    for(auto itr = pageTable.begin(); itr != pageTable.end(); itr++){
+            if(itr->second.getPage() == currRunning.getPage() && itr->second.getPid() == currRunning.getPid()){
+                usedMemory.remove(itr->first);
+                usedMemory.push_front(itr->first);
+                break;
+            } 
+        }
+
 }
 
 void Ram::remove(int pid){
@@ -53,7 +62,19 @@ void Ram::remove(int pid){
     }
 }
 
-void Ram::setMaxFrame(int mf){
+void Ram::isRunning(int page, int pid)
+{
+    for(auto itr = pageTable.begin(); itr != pageTable.end(); itr++){
+            if(itr->second.getPage() == page && itr->second.getPid() == pid){
+                usedMemory.remove(itr->first);
+                usedMemory.push_front(itr->first);
+                break;
+            } 
+        }
+}
+
+void Ram::setMaxFrame(int mf)
+{
     maxFrame = mf;
 }
 
@@ -72,18 +93,24 @@ bool Ram::isInTable(int page, int pid)
     return false;
 }
 
+void Ram::setRunningEntry(int page, int pid)
+{
+    currRunning.setPage(page);
+    currRunning.setPid(pid);
+}
+
 void Ram::print() const{
     std::cout << "Frame\tPage\tPID" << std::endl;
     for(int i = 0; i < pageTable.size(); i++){
         std::cout << i << "\t" << pageTable.at(i).getPage() << "\t" << pageTable.at(i).getPid() << std::endl;
     }
     
-    // TESTING /////
-    std::list<int> temp = usedMemory;
+    // // TESTING /////
+    // std::list<int> temp = usedMemory;
 
-    for(int i = 0; i < usedMemory.size(); i++){
-        std::cout << temp.front() << " ";
-        temp.pop_front();
-    }
-    std::cout << std::endl;
+    // for(int i = 0; i < usedMemory.size(); i++){
+    //     std::cout << temp.front() << " ";
+    //     temp.pop_front();
+    // }
+    // std::cout << std::endl;
 }
