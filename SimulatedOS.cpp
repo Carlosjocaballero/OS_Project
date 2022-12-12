@@ -93,6 +93,11 @@ void SimulatedOS::FetchFrom(unsigned int memoryAddress){
 }
 
 void SimulatedOS::DiskJobCompleted(int diskNumber){
+    if(disks[diskNumber].isDiskEmpty() && disks[diskNumber].isDiskQueueEmpty()){
+        std::cout << "Instruction ignored. Requested disk is idle and has no queue" << std::endl;
+        return;
+    }
+    
     if(cpu.isEmpty()) {
         cpu.setRunningPID(processTable[disks[diskNumber].getDiskPriority()].getPID());
         cpu.setRunningPriority(disks[diskNumber].getDiskPriority());
@@ -109,7 +114,7 @@ void SimulatedOS::DiskJobCompleted(int diskNumber){
         }
     }
     // DEBUG //////
-    if(disks[diskNumber].isDiskQueueEmpty() )
+    //if(disks[diskNumber].isDiskQueueEmpty() )
 
     disks[diskNumber].setDiskPriority(disks[diskNumber].top().getProcessPriority());
     disks[diskNumber].setDiskFile(disks[diskNumber].top().getFile());
